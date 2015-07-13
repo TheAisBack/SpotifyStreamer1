@@ -29,7 +29,6 @@ import kaaes.spotify.webapi.android.SpotifyService;
 import kaaes.spotify.webapi.android.models.Track;
 import kaaes.spotify.webapi.android.models.Tracks;
 
-
 public class ArtistTopTracks extends AppCompatActivity {
 
     public static final String TAG = ArtistTopTracks.class.getSimpleName();
@@ -65,7 +64,7 @@ public class ArtistTopTracks extends AppCompatActivity {
 
         setupToolbar();
     }
-
+    //searching track
     @Override
     protected void onResume() {
         super.onResume();
@@ -74,20 +73,18 @@ public class ArtistTopTracks extends AppCompatActivity {
         else
             hideLoading();
     }
-
+    //Destroy search
     @Override
     protected void onDestroy() {
         super.onDestroy();
         cancelSearch();
     }
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(TOP_TRACKS_RESULTS, new Gson().toJson(mTopTracksList));
         outState.putBoolean(SEARCH_DONE, mSearchDone);
     }
-
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
@@ -113,45 +110,39 @@ public class ArtistTopTracks extends AppCompatActivity {
             this.finish();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
+    // setting the actionbar of tracks
     private void setupToolbar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(R.string.top_ten_tracks);
         actionBar.setSubtitle(mArtistName);
-
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
-
+    //progress bar of search
     private void hideLoading() {
         mProgressBar.setVisibility(View.GONE);
     }
-
+    // This helps to search top tracks
     private void searchTopTracks() {
         cancelSearch();
-
         mCurrentTask = new GetArtistTopTracksTask();
         mCurrentTask.execute(mArtistId);
     }
-
+    // This code cancels search
     private void cancelSearch() {
         if(mCurrentTask == null)
             return;
-
         mCurrentTask.cancel(false);
     }
-
     class GetArtistTopTracksTask extends AsyncTask<String, Void, List<Track>> {
-
         @Override
         protected List<Track> doInBackground(String... strings) {
             String artistId = strings[0];
-
+            //Country orgins
             Map<String, Object> options = new HashMap<>();
             options.put("country", "CA");
-
+            //Find track
             try {
                 SpotifyApi api = new SpotifyApi();
                 SpotifyService spotifyService = api.getService();
@@ -162,35 +153,30 @@ public class ArtistTopTracks extends AppCompatActivity {
                 return null;
             }
         }
-
         @Override
         protected void onPostExecute(List<Track> tracksList) {
             hideLoading();
-
-            //Network connection. Tracks is null.
+            //Network connection.
             if(tracksList == null) {
                 Toast.makeText(ArtistTopTracks.this, R.string.network_error, Toast.LENGTH_LONG).show();
                 return;
             }
-
-            //No Top Tracks found.
+            //These tracks so no tracks.
             if(tracksList.size() == 0) {
                 Toast.makeText(ArtistTopTracks.this, R.string.no_top_tracks, Toast.LENGTH_LONG).show();
                 return;
             }
-
-            //Show Top Tracks.
+            //Code lets us see the top tracks
             mSearchDone = true;
             mTopTracksList = tracksList;
             showTopTracks();
         }
 
     }
-
+    //Show Top Tracks
     private void showTopTracks() {
         mAdapter = new TopTracks(ArtistTopTracks.this);
         mAdapter.setTopTracksList(mTopTracksList);
         mTopTracksListView.setAdapter(mAdapter);
     }
-
 }
