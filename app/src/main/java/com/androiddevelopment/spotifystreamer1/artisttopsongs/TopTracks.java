@@ -55,8 +55,6 @@ public class TopTracks extends BaseAdapter{
             if(thumbnailUrl == null)
                 thumbnailUrl = Utils.getThumbnailUrl(track.album.images, 0);
         }
-
-        //Apply data to layout
         if(thumbnailUrl != null)
             Picasso.with(mContext).load(thumbnailUrl).into(holder.thumbnail);
         else
@@ -90,7 +88,6 @@ public class TopTracks extends BaseAdapter{
         return 0;
     }
 
-    //
     static class ViewHolder {
         @InjectView(R.id.thumbnail) ImageView thumbnail;
         @InjectView(R.id.track_name) TextView trackName;
