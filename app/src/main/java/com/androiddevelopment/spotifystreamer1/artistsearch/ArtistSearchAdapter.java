@@ -69,22 +69,15 @@ public class ArtistSearchAdapter extends BaseAdapter {
             holder = new ViewHolder(convertView);
             convertView.setTag(holder);
         }
-
-        //Get artist
         Artist artist = mArtistsList.get(position);
 
-        //Get thumbnailUrl
         String thumbnailUrl = null;
         if(artist.images.size() > 0) {
-            //Try 200px image
             thumbnailUrl = Utils.getThumbnailUrl(artist.images, 200);
-            //Get first available
             if(thumbnailUrl == null) {
                 thumbnailUrl = Utils.getThumbnailUrl(artist.images, 0);
             }
         }
-
-        //Apply data to layout
         if(thumbnailUrl != null)
             Picasso.with(mContext).load(thumbnailUrl).into(holder.thumbnail);
         else

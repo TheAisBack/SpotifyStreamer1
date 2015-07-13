@@ -36,24 +36,6 @@ public class TopTracks extends BaseAdapter{
     }
 
     @Override
-    public int getCount() {
-        return mTopTracksList.size();
-    }
-
-    @Override
-    public Track getItem(int i) {
-        if(mTopTracksList.size() == 0)
-            return null;
-
-        return mTopTracksList.get(i);
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
         ViewHolder holder;
 
@@ -90,6 +72,25 @@ public class TopTracks extends BaseAdapter{
         this.mTopTracksList = topTracksList;
     }
 
+    @Override
+    public int getCount() {
+        return mTopTracksList.size();
+    }
+
+    @Override
+    public Track getItem(int i) {
+        if(mTopTracksList.size() == 0)
+            return null;
+
+        return mTopTracksList.get(i);
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    //
     static class ViewHolder {
         @InjectView(R.id.thumbnail) ImageView thumbnail;
         @InjectView(R.id.track_name) TextView trackName;

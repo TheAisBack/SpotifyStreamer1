@@ -129,9 +129,6 @@ public class ArtistTopTracks extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    /**
-     * Task methods
-     */
     private void searchTopTracks() {
         cancelSearch();
 

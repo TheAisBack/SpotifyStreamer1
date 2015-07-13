@@ -32,23 +32,17 @@ public class ArtistSearch extends AppCompatActivity {
 
     static final String TAG = ArtistSearch.class.getSimpleName();
 
-    //Constants
     public static final String SEARCH_RESULTS = "search_results";
     public static final int SEARCH_DELAY = 500;
 
-    //Variables
     SearchArtistTask mCurrentTask;
     ArtistSearchAdapter mAdapter;
     List<Artist> mArtistsList;
 
-    //Controls
     @InjectView(R.id.search) EditText mSearchInput;
     @InjectView(R.id.search_results) ListView mSearchResultsListView;
     @InjectView(R.id.bar) ProgressBar mProgressBar;
 
-    /**
-     * Lifecycle methods
-     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +71,6 @@ public class ArtistSearch extends AppCompatActivity {
             }
         });
 
-        //Item click for ListView
         mSearchResultsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
@@ -132,9 +125,6 @@ public class ArtistSearch extends AppCompatActivity {
         mProgressBar.setVisibility(View.GONE);
     }
 
-    /**
-     * Artist search methods
-     */
     private void searchArtists() {
         cancelSearch();
 
@@ -152,24 +142,19 @@ public class ArtistSearch extends AppCompatActivity {
     class SearchArtistTask extends AsyncTask<String, Void, List<Artist>> {
         @Override
         protected List<Artist> doInBackground(String... strings) {
-            //Get search input
             String queryString = strings[0];
 
-            //Delay search if user is typing
             try {
                 Thread.sleep(SEARCH_DELAY);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-            //Check if task cancelled
             if(isCancelled() || queryString.length() == 0)
                 return new ArrayList<Artist>();
 
-            //Add wildcards for LIKE type seach
             queryString = "*" + queryString + "*";
 
-            //Calls Spotify API code
             try {
                 SpotifyApi api = new SpotifyApi();
                 SpotifyService spotifyService = api.getService();
@@ -184,16 +169,13 @@ public class ArtistSearch extends AppCompatActivity {
         @Override
         protected void onPostExecute(List<Artist> artistsList) {
             hideLoading();
-            //Network error
             if(artistsList == null) {
                 Toast.makeText(ArtistSearch.this, R.string.network_error, Toast.LENGTH_LONG).show();
                 return;
             }
-            //No artist
             if(artistsList.size() == 0 && mSearchInput.getText().toString().length() > 0) {
                 Toast.makeText(ArtistSearch.this, R.string.no_artists_found, Toast.LENGTH_LONG).show();
             }
-            //Shows a list of Artists
             mArtistsList = artistsList;
             showResults();
         }
